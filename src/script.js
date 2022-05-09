@@ -59,7 +59,7 @@ const symbols = {
         ',': [',', 'б'],
         '.': ['.', 'ю'],
         '/': ['/', '.'],
-        "up": '\t&#9650;',
+        "up": '&#9650;',
         'shift2': 'SHIFT'
     },
     'fifth_row': {
@@ -75,8 +75,11 @@ const symbols = {
     }
 };
 
+let lang = localStorage.getItem("lang") || 'en';
 
-function build_keyboard() {
+let build_keyboard = () => {
+    let current_lang = lang === 'en' ? 0 : 1;
+
     const textarea_div = document.createElement('div');
     textarea_div.classList.add('textarea-div');
     document.querySelector('body').append(textarea_div);
@@ -95,11 +98,88 @@ function build_keyboard() {
             const key = document.createElement('div');
             key.classList.add('key');
             key.classList.add(`${s}`);
-            key.innerHTML = Array.isArray(symbols[row][s]) ? symbols[row][s][0] : symbols[row][s];
+            key.innerHTML = Array.isArray(symbols[row][s]) ? symbols[row][s][current_lang] : symbols[row][s];
             keyboard_row.append(key);
         }
     }
+    const lang_info = document.createElement('p');
+    lang_info.innerHTML = 'Переключение языка на ctrl + shift';
+    lang_info.style.color = 'black';
+    document.querySelector('body').append(lang_info);
+
+
+    document.querySelector('textarea').focus();
+
+    document.querySelectorAll('.key').forEach(k=>{
+        k.addEventListener('click', function (event){
+            printSomething(k.innerHTML);
+        });
+    })
+
+    document.addEventListener('keydown', function (event){
+        if (event.key.length>1 && (event.key !== 'Backspace')) {
+            printSomething(event.key);
+        }
+    })
 }
 
 build_keyboard();
+
+let shift_key = false;
+let ctrl_key = false;
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function printSomething (key) {
+    document.querySelector('textarea').focus();
+    let textarea = document.querySelector('textarea');
+    if (key.length === 1) {
+        textarea.value += key;
+    } else if (key.toLowerCase()==='backspace') {
+        textarea.value = textarea.value.slice(0, -1);
+    } else if (key.toLowerCase()==='capslock') {
+        document.querySelectorAll('.key').forEach(k=>{
+            if (k.innerHTML !== k.innerHTML.toUpperCase()) {
+                if (k.innerHTML.length === 1) {
+                    k.innerHTML = k.innerHTML.toUpperCase();
+                }
+            } else {
+                if (k.innerHTML.length === 1) {
+                    k.innerHTML = k.innerHTML.toLowerCase();
+                }
+            }
+        })
+    } else if (key.toLowerCase()==='space') {
+        textarea.value += ' ';
+    } else if (key.toLowerCase()==='shift') {
+        shift_key = true;
+        sleep(1000).then(() => {
+            shift_key = false;
+        });
+    } else if (key.toLowerCase()==='control') {
+        ctrl_key = true;
+        sleep(1000).then(() => {
+            ctrl_key = false;
+        });
+    }
+
+    if (shift_key && ctrl_key) {
+        if (lang === 'en') {
+            lang = 'ru';
+            localStorage.setItem('lang', lang);
+            location.reload();
+        } else {
+            lang = 'en';
+            localStorage.setItem('lang', lang);
+            location.reload();
+        }
+    }
+
+
+}
+
+
+
+
 
