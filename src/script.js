@@ -144,6 +144,7 @@ function printSomething (key) {
                 if (k.innerHTML.length === 1) {
                     k.innerHTML = k.innerHTML.toUpperCase();
                 }
+                
             } else {
                 if (k.innerHTML.length === 1) {
                     k.innerHTML = k.innerHTML.toLowerCase();
@@ -175,6 +176,8 @@ function printSomething (key) {
             location.reload();
         }
     }
+
+
 
 
 }
