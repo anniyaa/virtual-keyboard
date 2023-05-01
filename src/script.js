@@ -103,7 +103,7 @@ let build_keyboard = () => {
         }
     }
     const lang_info = document.createElement('p');
-    lang_info.innerHTML = 'Переключение языка на ctrl + shift';
+    lang_info.innerHTML = 'The keyboard shortcut for changing language: ctrl + shift';
     lang_info.style.color = 'black';
     document.querySelector('body').append(lang_info);
 
@@ -144,6 +144,7 @@ function printSomething (key) {
                 if (k.innerHTML.length === 1) {
                     k.innerHTML = k.innerHTML.toUpperCase();
                 }
+                
             } else {
                 if (k.innerHTML.length === 1) {
                     k.innerHTML = k.innerHTML.toLowerCase();
@@ -175,6 +176,8 @@ function printSomething (key) {
             location.reload();
         }
     }
+
+
 
 
 }
